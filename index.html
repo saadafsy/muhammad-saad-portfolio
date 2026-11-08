@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muhammad Saad · Blender tools for electronics</title>
+<meta name="description" content="Portfolio of Muhammad Saad: CircuitKit PCB Boards, a Blender add-on that imports PCB design files as detailed 3D boards, plus other Blender work.">
+<meta property="og:title" content="Muhammad Saad · Blender tools for electronics">
+<meta property="og:description" content="CircuitKit PCB Boards: PCB design files to detailed 3D boards in Blender, with a render studio, looks and camera poses.">
+<meta property="og:image" content="assets/img/hero.jpg">
+<meta name="theme-color" content="#0b0f17">
+<script>
+/* ==================================================================
+   TODO (Saad): fill these in before you send the link anywhere.
+   Leave a value as "" to hide it. Nothing else needs editing.
+   ================================================================== */
+const DEMO_VIDEO_URL = "";   // TODO: YouTube link of the demo video, e.g. "https://youtu.be/XXXXXXXXXXX"
+const CONTACT_EMAIL  = "";   // TODO: public contact email, e.g. "name@example.com"
+const CONTACT_LINKS  = [     // TODO: optional profile links, e.g. ["ArtStation", "https://www.artstation.com/yourname"]
+];
+</script>
+<style>
+:root{
+  --bg:#0b0f17; --bg2:#111723; --card:#151c2a; --line:#232c3d;
+  --text:#e8ecf3; --muted:#9aa5b8; --accent:#3ad0ff; --accent2:#8be9ff;
+  --radius:14px; --max:1180px;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 var(--font);-webkit-font-smoothing:antialiased}
+img,video{display:block;max-width:100%;height:auto}
+a{color:var(--accent2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 16px}
+section{padding:72px 0;border-top:1px solid var(--line)}
+h1,h2,h3{line-height:1.15;margin:0 0 12px;letter-spacing:-.01em}
+h2{font-size:clamp(26px,4vw,38px)}
+h3{font-size:19px}
+p{margin:0 0 14px}
+.muted{color:var(--muted)}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:clamp(17px,2vw,19px);color:#cdd5e2;max-width:760px}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:20;background:rgba(11,15,23,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:56px;gap:16px}
+.brand{font-weight:700;color:var(--text);white-space:nowrap}
+.nav ul{list-style:none;display:flex;gap:20px;margin:0;padding:0;font-size:14px;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav li a{color:var(--muted);white-space:nowrap}
+.nav li a:hover{color:var(--text);text-decoration:none}
+@media (max-width:720px){.nav ul .opt{display:none}}
+@media (max-width:440px){.nav ul .opt2{display:none}.nav ul{gap:14px}}
+
+/* hero */
+.hero{position:relative;min-height:min(86vh,760px);display:flex;align-items:flex-end;overflow:hidden;border-top:0;padding:0}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,15,23,.05) 0%,rgba(11,15,23,.25) 45%,rgba(11,15,23,.92) 85%,var(--bg) 100%)}
+.hero .wrap{position:relative;z-index:1;padding-bottom:56px;width:100%}
+.hero h1{font-size:clamp(40px,7vw,76px);font-weight:800}
+.hero .lead{color:#e3e8f0;text-shadow:0 1px 12px rgba(0,0,0,.6)}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.btn{display:inline-block;padding:11px 20px;border-radius:999px;font-weight:600;font-size:15px;border:1px solid var(--accent);color:#04121a;background:var(--accent)}
+.btn.ghost{background:rgba(11,15,23,.55);color:var(--text);border-color:#3a4558}
+.btn:hover{text-decoration:none;filter:brightness(1.08)}
+.hero .cap{position:absolute;right:16px;top:72px;z-index:1;font-size:12px;color:#d7dde8;background:rgba(11,15,23,.6);padding:4px 10px;border-radius:999px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0;padding:0;list-style:none}
+.chips li{font-size:14px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--bg2);color:#cfd7e4}
+
+/* gallery */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
+.grid figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.grid a{display:block;aspect-ratio:3/2;overflow:hidden;background:#0d121b}
+.grid a.wide{aspect-ratio:2/1}
+.grid img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.grid a:hover img{transform:scale(1.03)}
+.grid figcaption{padding:10px 14px 12px;font-size:14px;color:var(--muted)}
+.grid figcaption b{color:var(--text);font-weight:600}
+.grid.two{grid-template-columns:repeat(2,1fr);margin-top:14px}
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.grid,.grid.two{grid-template-columns:1fr}}
+
+/* split blocks */
+.split{display:grid;grid-template-columns:1fr 1.5fr;gap:36px;align-items:center}
+.split.rev{grid-template-columns:1.5fr 1fr}
+.frame{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#000}
+.frame figcaption,.note{font-size:13px;color:var(--muted);padding:8px 2px 0}
+@media (max-width:860px){.split,.split.rev{grid-template-columns:1fr;gap:22px}}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.step a{display:block;aspect-ratio:1600/802;overflow:hidden;background:#000}
+.step img{width:100%;height:100%;object-fit:cover}
+.step div{padding:14px 16px 16px}
+.step h3::before{counter-increment:s;content:counter(s);display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:50%;background:var(--accent);color:#04121a;font-size:14px;font-weight:800;vertical-align:2px}
+.step p{font-size:15px;color:#c3ccda;margin:0}
+@media (max-width:860px){.steps{grid-template-columns:1fr}}
+
+/* video */
+.video{position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:#000;margin-top:26px}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:30px 0 22px}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.fact strong{display:block;font-size:clamp(28px,3.4vw,38px);line-height:1.1;color:var(--accent);font-weight:800}
+.fact span{font-size:14px;color:#c3ccda}
+@media (max-width:860px){.facts{grid-template-columns:repeat(2,1fr)}}
+ul.list{margin:0;padding-left:20px;color:#cdd5e2}
+ul.list li{margin:6px 0}
+
+/* about / contact */
+.about{display:grid;grid-template-columns:1.3fr 1fr;gap:36px}
+@media (max-width:860px){.about{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.card h3{font-size:16px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+footer{border-top:1px solid var(--line);padding:28px 0 40px;font-size:13px;color:var(--muted)}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(5,7,11,.94);display:none;align-items:center;justify-content:center;flex-direction:column;padding:16px}
+.lb.open{display:flex}
+.lb img{max-width:min(1600px,100%);max-height:calc(100vh - 110px);width:auto;height:auto;border-radius:8px}
+.lb p{color:#d5dbe6;font-size:14px;margin:12px 0 0;text-align:center;max-width:900px}
+.lb button{position:absolute;background:rgba(21,28,42,.9);color:var(--text);border:1px solid var(--line);border-radius:999px;width:44px;height:44px;font-size:22px;line-height:1;cursor:pointer}
+.lb .x{top:14px;right:14px}.lb .pv{left:14px;top:50%}.lb .nx{right:14px;top:50%}
+@media (max-width:560px){.lb .pv,.lb .nx{top:auto;bottom:14px}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">Muhammad Saad</a>
+    <ul>
+      <li><a href="#circuitkit">CircuitKit</a></li>
+      <li class="opt2"><a href="#how">How it works</a></li>
+      <li id="nav-video" hidden><a href="#demo">Demo video</a></li>
+      <li class="opt"><a href="#facts">Tested</a></li>
+      <li class="opt"><a href="#more">More work</a></li>
+      <li><a href="#about">About</a></li>
+      <li id="nav-contact" hidden><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <img src="assets/img/hero.jpg" srcset="assets/img/hero-sm.jpg 760w, assets/img/hero.jpg 1920w" sizes="100vw" alt="Retro Gold circuit board with glowing red and green LEDs on a green cutting mat, rendered in Blender" width="1920" height="1080" fetchpriority="high">
+  <span class="cap">Retro Gold ready board · 3/4 right camera pose · Cycles</span>
+  <div class="wrap">
+    <p class="eyebrow">Blender add-ons · Electronics visuals</p>
+    <h1>Muhammad Saad</h1>
+    <p class="lead">I build Blender tools for electronics visuals. My main project, <strong>CircuitKit PCB Boards</strong>, turns PCB design files into detailed 3D boards and gives you a studio to present them.</p>
+    <div class="btns">
+      <a class="btn" href="#circuitkit">See CircuitKit</a>
+      <a class="btn ghost" id="hero-video" href="#demo" hidden>Watch the demo video</a>
+      <a class="btn ghost" href="#how">How it works</a>
+    </div>
+  </div>
+</section>
+
+<section id="circuitkit">
+  <div class="wrap">
+    <p class="eyebrow">Featured project · Blender add-on</p>
+    <h2>CircuitKit PCB Boards</h2>
+    <p class="lead">Pick a board file, press Import, and CircuitKit builds a real 3D board from the design: outline, cutouts, drilled and plated holes, top, bottom and inner copper, traces, filled zones, pads, vias, silkscreen and part bodies with solder fillets. Then it gives you the tools to present it: a render studio, looks, camera poses, an exploded view and callouts.</p>
+    <ul class="chips">
+      <li>12 formats read directly: KiCad, Gerber, IPC-2581, ODB++, Altium, EasyEDA, Eagle XML, PADS and more</li>
+      <li>Render studio with 7 camera presets</li>
+      <li>9 one-click looks</li>
+      <li>10 named camera poses and a pose sheet</li>
+      <li>Exploded view, callouts and a parts list</li>
+      <li>Parts library of about 350 parts</li>
+      <li>PC hardware kit: 75 part families, 427 variants</li>
+      <li>GLB and USDZ export</li>
+    </ul>
+
+    <div class="grid" id="gallery">
+      <figure><a href="assets/img/kestrel-bench.jpg" data-cap="Kestrel M4 sample board, imported from its .kicad_pcb file and rendered on the Product Shot bench."><img src="assets/img/kestrel-bench-sm.jpg" alt="Blue four-layer microcontroller board on a green cutting mat" width="760" height="570" loading="lazy"></a><figcaption><b>Kestrel M4</b> · Product Shot bench</figcaption></figure>
+      <figure><a href="assets/img/skylark-macro.jpg" data-cap="Skylark sample board: the Macro preset picks a part and sets a shallow depth of field."><img src="assets/img/skylark-macro-sm.jpg" alt="Close-up of a gold RF connector on a purple circuit board" width="760" height="570" loading="lazy"></a><figcaption><b>Skylark</b> · Macro preset</figcaption></figure>
+      <figure><a href="assets/img/volta-explode.jpg" data-cap="Volta power board in the exploded layer view, with the board layers pulled apart."><img src="assets/img/volta-explode-sm.jpg" alt="Red power board with its layers pulled apart in an exploded view" width="760" height="570" loading="lazy"></a><figcaption><b>Volta</b> · Exploded layer view</figcaption></figure>
+      <figure><a href="assets/img/echo-bench.jpg" data-cap="Echo sample board: through-hole capacitors and screw terminals next to SMD parts."><img src="assets/img/echo-bench-sm.jpg" alt="Yellow circuit board with large blue capacitors and green screw terminals" width="760" height="570" loading="lazy"></a><figcaption><b>Echo</b> · Through-hole and SMD parts</figcaption></figure>
+      <figure><a href="assets/img/tactile-macro.jpg" data-cap="Tactile keypad board, macro close-up of the key switches."><img src="assets/img/tactile-macro-sm.jpg" alt="Close-up of black key switches on a white circuit board" width="760" height="570" loading="lazy"></a><figcaption><b>Tactile</b> · Macro close-up</figcaption></figure>
+      <figure><a href="assets/img/retro-low.jpg" data-cap="Retro Gold ready board from the Low hero camera pose, LEDs glowing."><img src="assets/img/retro-low-sm.jpg" alt="Low angle view of a dark circuit board with a row of glowing LEDs" width="760" height="428" loading="lazy"></a><figcaption><b>Retro Gold</b> · Low hero pose</figcaption></figure>
+      <figure><a href="assets/img/flex-u.jpg" data-cap="Rigid-Flex U ready board with the flex section folded; the fold can be animated."><img src="assets/img/flex-u-sm.jpg" alt="Rigid-flex board folded into a U shape" width="760" height="428" loading="lazy"></a><figcaption><b>Rigid-Flex U</b> · Folded flex board</figcaption></figure>
+      <figure><a href="assets/img/pc-test-bench.jpg" data-cap="PC hardware kit: the open test bench showcase scene with a graphics card, memory and a cooler."><img src="assets/img/pc-test-bench-sm.jpg" alt="Open PC test bench with a graphics card and motherboard" width="760" height="428" loading="lazy"></a><figcaption><b>PC hardware kit</b> · Test bench scene</figcaption></figure>
+      <figure><a href="assets/img/pc-full-glass.jpg" data-cap="PC hardware kit: the full tower showcase scene with a glass side panel."><img src="assets/img/pc-full-glass-sm.jpg" alt="Full tower PC case with glowing fans" width="760" height="428" loading="lazy"></a><figcaption><b>PC hardware kit</b> · Full tower scene</figcaption></figure>
+    </div>
+    <div class="grid two" id="gallery3">
+      <figure><a class="wide" href="assets/img/nine-looks.jpg" data-cap="Nine built-in looks, from Realistic to Cyberpunk neon, Blueprint, Holographic and two chip-art looks."><img src="assets/img/nine-looks-sm.jpg" alt="Grid of nine circuit boards, each in a different built-in look" width="760" height="380" loading="lazy"></a><figcaption><b>Nine looks</b> · one click each, same board</figcaption></figure>
+      <figure><a class="wide" href="assets/img/explode-callouts.jpg" data-cap="Exploded view and automatic callouts with a bill of materials card, next to the add-on panel."><img src="assets/img/explode-callouts-sm.jpg" alt="Callout labels and an exploded board next to the add-on side panel" width="760" height="380" loading="lazy"></a><figcaption><b>Explode and callouts</b> · with the add-on panel</figcaption></figure>
+    </div>
+    <p class="note">All boards shown are original sample and ready boards made for CircuitKit. Click any image to enlarge.</p>
+  </div>
+</section>
+
+<section id="poses">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">Camera poses</p>
+      <h2>Ten poses, one pose sheet</h2>
+      <p>Pick a named pose and Aim Camera frames the whole scene from that angle, keeps the board sharp and turns the studio lights with the camera. Render Pose Sheet renders the poses you tick, one PNG each, plus a labeled contact sheet.</p>
+      <p class="muted">Top-down flat-lay, 3/4 left, 3/4 right, low hero, side profile, end-on, underside, close-up corner, high orbit and overhead tilt.</p>
+    </div>
+    <figure class="frame" style="margin:0">
+      <a href="assets/img/pose-sheet.jpg" class="lbx" data-cap="Pose sheet of the Stereo Amp ready board, rendered by the add-on (Cycles, 48 samples)."><img src="assets/img/pose-sheet.jpg" alt="Contact sheet of ten camera poses of a green amplifier board" width="1600" height="856" loading="lazy"></a>
+    </figure>
+  </div>
+  <div class="wrap split rev" style="margin-top:44px">
+    <figure class="frame" style="margin:0">
+      <video src="assets/video/looks-loop.mp4" poster="assets/img/looks-loop-poster.jpg" muted loop playsinline autoplay preload="metadata" width="1280" height="720" aria-label="The Skylark board cycling through five looks"></video>
+    </figure>
+    <div>
+      <p class="eyebrow">Looks in motion</p>
+      <h2>Same board, new look</h2>
+      <p>A nine-second loop of the Skylark board in five of the nine looks: Realistic, Cyberpunk neon, Blueprint, Holographic and Retro gold. The board geometry stays the same; only the materials change.</p>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <p class="eyebrow">How it works</p>
+    <h2>From board file to render in three steps</h2>
+    <div class="steps">
+      <div class="step">
+        <a href="assets/img/step1-import.jpg" class="lbx" data-cap="Step 1: Import my board opens a file browser; pick a .kicad_pcb, Gerber folder or other design file."><img src="assets/img/step1-import-sm.jpg" alt="File browser listing sample .kicad_pcb boards" width="760" height="381" loading="lazy"></a>
+        <div><h3>Import</h3><p>Choose your board file from File &gt; Import or the Start here box. CircuitKit picks the right reader for the format.</p></div>
+      </div>
+      <div class="step">
+        <a href="assets/img/step2-look.jpg" class="lbx" data-cap="Step 2: the Retro gold look applied, with the Camera Poses panel below it."><img src="assets/img/step2-look-sm.jpg" alt="Gold-look board in the viewport with the look and camera pose controls" width="760" height="381" loading="lazy"></a>
+        <div><h3>Style</h3><p>Apply a look with one click, then pick a camera pose and press Aim Camera.</p></div>
+      </div>
+      <div class="step">
+        <a href="assets/img/step3-render.jpg" class="lbx" data-cap="Step 3: a finished pose sheet of the Kestrel board, opened in the image editor."><img src="assets/img/step3-render-sm.jpg" alt="Finished pose sheet of a blue board in the image editor" width="760" height="381" loading="lazy"></a>
+        <div><h3>Render</h3><p>Render and save a single shot, or render a full pose sheet in one go.</p></div>
+      </div>
+    </div>
+    <p class="note">Frames from screen recordings of the add-on running in Blender 5.1.2.</p>
+  </div>
+</section>
+
+<section id="demo" hidden>
+  <div class="wrap">
+    <p class="eyebrow">Demo video</p>
+    <h2>CircuitKit in 36 seconds</h2>
+    <p class="lead">Import, looks, exploded view and callouts, camera poses, the pose sheet and a PC scene, recorded in the add-on.</p>
+    <div class="video" id="video-box"></div>
+    <p class="note"><a id="video-link" href="#" target="_blank" rel="noopener">Open the demo video on YouTube</a></p>
+  </div>
+</section>
+
+<section id="facts">
+  <div class="wrap">
+    <p class="eyebrow">Tested, with the numbers</p>
+    <h2>What my own tests show</h2>
+    <div class="facts">
+      <div class="fact"><strong>509 / 509</strong><span>real KiCad boards from public projects imported, no crashes</span></div>
+      <div class="fact"><strong>60 / 60</strong><span>Gerber sets imported</span></div>
+      <div class="fact"><strong>~1.3 s</strong><span>median import time across the 509 boards</span></div>
+      <div class="fact"><strong>4.2 to 5.2</strong><span>Blender versions tested (4.2 LTS, 5.0, 5.1, 5.2)</span></div>
+    </div>
+    <ul class="list">
+      <li>Import time across the 509 boards: median about 1.3 seconds, 90 percent under 4.4 seconds, slowest 30 seconds.</li>
+      <li>19 of the 509 boards (3.7 percent) have no board edge in the file and get a simple rectangle outline.</li>
+      <li>641 of 44,877 parts (1.5 percent) are drawn as a plain generic block.</li>
+      <li>Tested builds: Blender 4.2.23 LTS, 5.0.1, 5.1.2 and 5.2.3, on Windows 11. macOS and Linux have not been tested.</li>
+      <li>KiCad is not needed to import. The add-on never goes online.</li>
+    </ul>
+    <p class="note">The board test ran in Blender 5.1.2. All figures come from my own scripted test runs, not an independent audit.</p>
+  </div>
+</section>
+
+<section id="more">
+  <div class="wrap">
+    <p class="eyebrow">More Blender work</p>
+    <h2>Softbox Lab: studio lighting built in Blender</h2>
+    <p class="lead">A lighting pack I built in Blender: 30 studio HDRIs rendered from virtual softboxes, strip lights, beauty dishes, a ring light and color gels, plus 40 gobo masks and 5 editable light rigs. Same product, same camera; only the lighting changes. Not yet released.</p>
+    <div class="grid" id="gallery2">
+      <figure><a href="assets/img/soft-gel.jpg" data-cap="Softbox Lab: color gel duo HDRI on a sample product scene."><img src="assets/img/soft-gel-sm.jpg" alt="Product jar and bottle lit by cyan and pink gel lights" width="760" height="570" loading="lazy"></a><figcaption><b>Color gel duo</b></figcaption></figure>
+      <figure><a href="assets/img/soft-window.jpg" data-cap="Softbox Lab: window gobo with a sun lamp for hard, patterned shadows."><img src="assets/img/soft-window-sm.jpg" alt="Product scene with venetian blind shadows" width="760" height="570" loading="lazy"></a><figcaption><b>Window gobo</b></figcaption></figure>
+      <figure><a href="assets/img/soft-rim.jpg" data-cap="Softbox Lab: rim light setup on a dark background."><img src="assets/img/soft-rim-sm.jpg" alt="Product scene with rim lighting on a dark background" width="760" height="570" loading="lazy"></a><figcaption><b>Rim light</b></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about">
+    <div>
+      <p class="eyebrow">About</p>
+      <h2>Hi, I'm Saad</h2>
+      <p>I'm Muhammad Saad, an electrical engineering student at the University of Waterloo. My home is in Calgary, Alberta. I build Blender tools that turn electronics design files into clean 3D visuals, so a board can be shown the way it will look before it is made.</p>
+      <p>CircuitKit PCB Boards is my main project: importers for each PCB format, board and part builders, a render studio, looks and a camera pose system, all checked by automated tests against hundreds of real boards.</p>
+    </div>
+    <div class="card">
+      <h3>What I work with</h3>
+      <ul class="list">
+        <li>Python and the Blender API (add-ons, operators, panels)</li>
+        <li>Cycles and EEVEE rendering, lighting and materials</li>
+        <li>Procedural modeling of boards and parts</li>
+        <li>PCB file formats: KiCad, Gerber and Excellon, IPC-2581, ODB++</li>
+        <li>Automated testing across Blender 4.2 LTS to 5.2</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="contact" hidden>
+  <div class="wrap">
+    <p class="eyebrow">Contact</p>
+    <h2>Get in touch</h2>
+    <ul class="list" id="contact-list"></ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Muhammad Saad. All images and recordings on this page are my own work.</div>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="x" aria-label="Close">×</button>
+  <button class="pv" aria-label="Previous image">‹</button>
+  <button class="nx" aria-label="Next image">›</button>
+  <img alt="">
+  <p></p>
+</div>
+
+<script>
+(function(){
+  // Demo video (only shown when DEMO_VIDEO_URL is set)
+  function ytId(u){
+    var m = String(u).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : "";
+  }
+  var id = ytId(DEMO_VIDEO_URL);
+  if (id) {
+    document.getElementById("demo").hidden = false;
+    document.getElementById("nav-video").hidden = false;
+    document.getElementById("hero-video").hidden = false;
+    var f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?rel=0";
+    f.title = "CircuitKit PCB Boards demo video";
+    f.loading = "lazy";
+    f.allow = "accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen";
+    f.allowFullscreen = true;
+    document.getElementById("video-box").appendChild(f);
+    document.getElementById("video-link").href = DEMO_VIDEO_URL;
+  }
+
+  // Contact (only shown when something is set)
+  var list = document.getElementById("contact-list"), n = 0;
+  function add(label, href, text){
+    var li = document.createElement("li"), a = document.createElement("a");
+    a.href = href; a.textContent = text;
+    if (href.indexOf("mailto:") !== 0) { a.target = "_blank"; a.rel = "noopener"; }
+    li.appendChild(document.createTextNode(label + ": ")); li.appendChild(a); list.appendChild(li); n++;
+  }
+  if (CONTACT_EMAIL) add("Email", "mailto:" + CONTACT_EMAIL, CONTACT_EMAIL);
+  (CONTACT_LINKS || []).forEach(function(p){ if (p && p[1]) add(p[0], p[1], p[1].replace(/^https?:\/\//, "")); });
+  if (n) { document.getElementById("contact").hidden = false; document.getElementById("nav-contact").hidden = false; }
+
+  // Lightbox
+  var links = Array.prototype.slice.call(document.querySelectorAll("#gallery a, #gallery3 a, a.lbx, #gallery2 a"));
+  var lb = document.getElementById("lb"), img = lb.querySelector("img"), cap = lb.querySelector("p"), cur = 0;
+  function show(i){
+    cur = (i + links.length) % links.length;
+    var a = links[cur];
+    img.src = a.getAttribute("href");
+    img.alt = (a.querySelector("img") || {}).alt || "";
+    cap.textContent = a.getAttribute("data-cap") || "";
+  }
+  links.forEach(function(a, i){
+    a.addEventListener("click", function(e){ e.preventDefault(); show(i); lb.classList.add("open"); });
+  });
+  function close(){ lb.classList.remove("open"); img.removeAttribute("src"); }
+  lb.querySelector(".x").onclick = close;
+  lb.querySelector(".pv").onclick = function(){ show(cur - 1); };
+  lb.querySelector(".nx").onclick = function(){ show(cur + 1); };
+  lb.addEventListener("click", function(e){ if (e.target === lb) close(); });
+  document.addEventListener("keydown", function(e){
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") close();
+    if (e.key === "ArrowLeft") show(cur - 1);
+    if (e.key === "ArrowRight") show(cur + 1);
+  });
+})();
+</script>
+</body>
+</html>
